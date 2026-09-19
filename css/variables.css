@@ -1,0 +1,106 @@
+/* ==========================================================================
+   VOYAGECRAFT DESIGN TOKENS & VARIABLES
+   Default: Sleek Luxury Dark Mode with High-Contrast Accents
+   ========================================================================== */
+
+:root {
+  /* Core Color Palette - Dark Luxury Twilight */
+  --bg-primary: #0b0f19;
+  --bg-secondary: #111827;
+  --bg-tertiary: #1f293d;
+  --bg-card: rgba(17, 24, 39, 0.75);
+  --bg-card-hover: rgba(31, 41, 61, 0.85);
+  --bg-glass: rgba(15, 23, 42, 0.65);
+  --bg-glass-heavy: rgba(11, 15, 25, 0.88);
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-color-hover: rgba(0, 229, 255, 0.3);
+  --border-glow: rgba(0, 229, 255, 0.18);
+
+  /* Vibrant Accents */
+  --primary: #00e5ff;
+  --primary-hover: #33ebff;
+  --primary-glow: rgba(0, 229, 255, 0.35);
+  --primary-dim: rgba(0, 229, 255, 0.12);
+
+  --secondary: #8b5cf6;
+  --secondary-hover: #a78bfa;
+  --secondary-glow: rgba(139, 92, 246, 0.35);
+
+  --accent-gold: #f59e0b;
+  --accent-coral: #f43f5e;
+  --accent-emerald: #10b981;
+  --accent-cyan: #06b6d4;
+
+  /* Typography Colors */
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-inverse: #0b0f19;
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #00e5ff 0%, #8b5cf6 100%);
+  --gradient-sunset: linear-gradient(135deg, #f43f5e 0%, #f59e0b 100%);
+  --gradient-emerald: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+  --gradient-card: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+  --gradient-hero: linear-gradient(180deg, rgba(11, 15, 25, 0.4) 0%, #0b0f19 100%);
+
+  /* Shadows & Glows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
+  --shadow-primary-glow: 0 0 25px rgba(0, 229, 255, 0.25);
+  --shadow-secondary-glow: 0 0 25px rgba(139, 92, 246, 0.25);
+
+  /* Sizing & Radius */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Blur Effects */
+  --backdrop-blur: blur(16px);
+  --backdrop-blur-subtle: blur(8px);
+}
+
+/* Light Mode Overrides (when explicitly toggled) */
+[data-theme="light"] {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f1f5f9;
+  --bg-card: rgba(255, 255, 255, 0.85);
+  --bg-card-hover: #ffffff;
+  --bg-glass: rgba(255, 255, 255, 0.75);
+  --bg-glass-heavy: rgba(255, 255, 255, 0.95);
+  --border-color: rgba(0, 0, 0, 0.08);
+  --border-color-hover: rgba(0, 160, 220, 0.4);
+  --border-glow: rgba(0, 160, 220, 0.2);
+
+  --primary: #0284c7;
+  --primary-hover: #0369a1;
+  --primary-glow: rgba(2, 132, 199, 0.25);
+  --primary-dim: rgba(2, 132, 199, 0.1);
+
+  --secondary: #7c3aed;
+  --secondary-hover: #6d28d9;
+  --secondary-glow: rgba(124, 58, 237, 0.25);
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --text-inverse: #ffffff;
+
+  --gradient-card: linear-gradient(145deg, rgba(0, 0, 0, 0.01) 0%, rgba(0, 0, 0, 0.03) 100%);
+  --gradient-hero: linear-gradient(180deg, rgba(248, 250, 252, 0.3) 0%, #f8fafc 100%);
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.12);
+  --shadow-primary-glow: 0 0 20px rgba(2, 132, 199, 0.15);
+  --shadow-secondary-glow: 0 0 20px rgba(124, 58, 237, 0.15);
+}

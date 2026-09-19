@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VoyageCraft | All-In-One Luxury Travel Planning Platform</title>
+  <meta name="description" content="Plan flights, reserve luxury hotels, explore world-famous destinations with interactive maps, book curated packages, and manage your entire travel budget in one unified platform." />
+
+  <!-- Google Fonts: Outfit & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Leaflet Map CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body>
+
+  <!-- ==========================================================================
+       SITE HEADER & NAVBAR
+       ========================================================================== -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <!-- Brand Logo -->
+      <div class="brand-logo" onclick="window.switchView('places-view')">
+        <div class="brand-icon">
+          <i class="fa-solid fa-compass"></i>
+        </div>
+        <div class="brand-text">Voyage<span>Craft</span></div>
+      </div>
+
+      <!-- Navigation Links -->
+      <ul class="nav-links">
+        <li class="nav-item">
+          <button class="nav-link active" data-view="places-view">
+            <i class="fa-solid fa-earth-americas"></i> <span data-i18n="nav_places">Famous Places</span>
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" data-view="flights-view">
+            <i class="fa-solid fa-plane"></i> <span data-i18n="nav_flights">Flights</span>
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" data-view="hotels-view">
+            <i class="fa-solid fa-hotel"></i> <span data-i18n="nav_hotels">Hotels</span>
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" data-view="packages-view">
+            <i class="fa-solid fa-suitcase-rolling"></i> <span data-i18n="nav_packages">Packages</span>
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" data-view="expenditure-view">
+            <i class="fa-solid fa-chart-pie"></i> <span data-i18n="nav_budget">Budget Tracker</span>
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" data-view="itinerary-view">
+            <i class="fa-solid fa-map-location-dot"></i> <span data-i18n="nav_itinerary">My Itinerary</span>
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" id="nav-btn-ask-ai" onclick="document.getElementById('ai-assistant-toggle-btn')?.click();" style="color: var(--primary); font-weight: 700;">
+            <i class="fa-solid fa-wand-magic-sparkles" style="color: var(--primary);"></i> <span data-i18n="nav_ask_ai">Ask AI</span>
+          </button>
+        </li>
+      </ul>
+
+      <!-- Global Actions -->
+      <div class="nav-actions">
+        <!-- Language Switcher Dropdown -->
+        <div class="currency-selector-wrapper">
+          <select id="global-language-select" class="currency-select" aria-label="Select Language">
+            <option value="en">🇺🇸 EN</option>
+            <option value="es">🇪🇸 ES</option>
+            <option value="fr">🇫🇷 FR</option>
+            <option value="de">🇩🇪 DE</option>
+            <option value="ja">🇯🇵 日本語</option>
+            <option value="hi">🇮🇳 हिन्दी</option>
+            <option value="ar">🇦🇪 العربية</option>
+          </select>
+          <i class="fa-solid fa-language currency-icon"></i>
+        </div>
+
+        <!-- Currency Dropdown -->
+        <div class="currency-selector-wrapper">
+          <select id="global-currency-select" class="currency-select" aria-label="Select Currency">
+            <option value="USD">USD ($)</option>
+            <option value="EUR">EUR (€)</option>
+            <option value="GBP">GBP (£)</option>
+            <option value="INR">INR (₹)</option>
+            <option value="JPY">JPY (¥)</option>
+            <option value="AUD">AUD (A$)</option>
+            <option value="CAD">CAD (C$)</option>
+          </select>
+          <i class="fa-solid fa-chevron-down currency-icon"></i>
+        </div>
+
+        <!-- Dark/Light Theme Toggle -->
+        <button class="btn-icon" id="btn-theme-toggle" title="Toggle Theme" aria-label="Toggle Theme">
+          <i class="fa-solid fa-sun"></i>
+        </button>
+
+        <!-- Active Trip Indicator Pill -->
+        <button class="trip-indicator-btn" id="btn-header-trip-pill" title="View Active Trip Summary">
+          <span class="trip-badge-count" id="header-trip-count">0</span>
+          <span class="trip-spent-val" id="header-trip-spent">$0</span>
+          <i class="fa-solid fa-chevron-right" style="font-size: 0.75rem; color: var(--primary);"></i>
+        </button>
+
+        <!-- Mobile Menu Toggle -->
+        <button class="btn-icon mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       HERO BANNER & MULTI-SERVICE SEARCH ENGINE
+       ========================================================================== -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-pill">
+          <i class="fa-solid fa-sparkles"></i> <span data-i18n="hero_pill">The Future of Seamless Travel</span>
+        </div>
+        <h1 class="hero-title">
+          <span data-i18n="hero_title_1">Explore the World,</span> <span class="gradient-text" data-i18n="hero_title_grad">Master Every Detail</span>
+        </h1>
+        <p class="hero-subtitle" data-i18n="hero_subtitle">
+          From international flight bookings and five-star sanctuaries to interactive destination discovery and real-time expenditure tracking.
+        </p>
+      </div>
+
+      <!-- Unified Multi-Tab Search Widget -->
+      <div class="search-hub-card">
+        <div class="search-tabs">
+          <button class="search-tab-btn active" data-target="hero-places-panel">
+            <i class="fa-solid fa-map-pin"></i> <span data-i18n="tab_places">Famous Places</span>
+          </button>
+          <button class="search-tab-btn" data-target="hero-flights-panel">
+            <i class="fa-solid fa-plane-departure"></i> <span data-i18n="tab_flights">Flight Bookings</span>
+          </button>
+          <button class="search-tab-btn" data-target="hero-hotels-panel">
+            <i class="fa-solid fa-bed"></i> <span data-i18n="tab_hotels">Hotel Stays</span>
+          </button>
+          <button class="search-tab-btn" data-target="hero-packages-panel">
+            <i class="fa-solid fa-compass"></i> <span data-i18n="tab_packages">Holiday Packages</span>
+          </button>
+        </div>
+
+        <div class="search-forms-wrapper">
+          <!-- 1. Places Search Panel -->
+          <div id="hero-places-panel" class="search-form-panel active">
+            <form id="hero-places-form" class="search-grid">
+              <div class="search-field">
+                <label><i class="fa-solid fa-location-crosshairs"></i> <span data-i18n="field_dest_city">Destination / City</span></label>
+                <input type="text" id="hero-places-search" placeholder="e.g. Paris, Tokyo, Bali, Swiss Alps..." data-i18n-placeholder="field_dest_city" />
+              </div>
+              <div class="search-field">
+                <label><i class="fa-solid fa-tags"></i> <span data-i18n="field_travel_style">Travel Style</span></label>
+                <select id="hero-places-style">
+                  <option value="all">All Experiences</option>
+                  <option value="cultural">Cultural & Historic</option>
+                  <option value="beach">Tropical Beaches</option>
+                  <option value="mountain">Mountain Escapes</option>
+                  <option value="romance">Romance & Sunset</option>
+                </select>
+              </div>
+              <div class="search-field">
+                <label><i class="fa-solid fa-wallet"></i> <span data-i18n="field_budget_range">Budget Range</span></label>
+                <select>
+                  <option value="all">Any Budget</option>
+                  <option value="budget">Backpacker ($50 - $100/day)</option>
+                  <option value="comfort">Comfort ($100 - $200/day)</option>
+                  <option value="luxury">Luxury ($200+/day)</option>
+                </select>
+              </div>
+              <button type="submit" class="btn-search">
+                <i class="fa-solid fa-magnifying-glass"></i> <span data-i18n="btn_discover_places">Discover Places</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- 2. Flights Search Panel -->
+          <div id="hero-flights-panel" class="search-form-panel">
+            <form id="hero-flights-form" class="search-grid">
+              <div class="search-field">
+                <label><i class="fa-solid fa-plane-departure"></i> Origin Airport</label>
+                <select id="hero-flight-origin">
+                  <option value="JFK">New York (JFK)</option>
+                  <option value="LHR">London (LHR)</option>
+                  <option value="DXB">Dubai (DXB)</option>
+                  <option value="SIN">Singapore (SIN)</option>
+                  <option value="FRA">Frankfurt (FRA)</option>
+                  <option value="SYD">Sydney (SYD)</option>
+                </select>
+              </div>
+              <div class="search-field">
+                <label><i class="fa-solid fa-plane-arrival"></i> <span data-i18n="field_destination">Destination</span></label>
+                <select id="hero-flight-dest">
+                  <option value="HND">Tokyo Haneda (HND)</option>
+                  <option value="CDG">Paris (CDG)</option>
+                  <option value="LHR">London Heathrow (LHR)</option>
+                  <option value="SIN">Singapore Changi (SIN)</option>
+                  <option value="BCN">Barcelona El Prat (BCN)</option>
+                  <option value="SYD">Sydney (SYD)</option>
+                  <option value="BKK">Bangkok Suvarnabhumi (BKK)</option>
+                  <option value="AMS">Amsterdam Schiphol (AMS)</option>
+                  <option value="DXB">Dubai (DXB)</option>
+                  <option value="DPS">Bali (DPS)</option>
+                  <option value="ZRH">Zurich / Swiss Alps (ZRH)</option>
+                  <option value="JTR">Santorini (JTR)</option>
+                  <option value="FCO">Rome (FCO)</option>
+                  <option value="CAI">Cairo (CAI)</option>
+                </select>
+              </div>
+              <div class="search-field">
+                <label><i class="fa-solid fa-calendar"></i> Departure Date</label>
+                <input type="date" value="2026-10-15" id="hero-flight-date" />
+              </div>
+              <div class="search-field">
+                <label><i class="fa-solid fa-chair"></i> Class</label>
+                <select id="flight-cabin-filter">
+                  <option value="economy">Economy Class</option>
+                  <option value="premium">Premium Economy</option>
+                  <option value="business">Business Class</option>
+                  <option value="first">First Class</option>
+                </select>
+              </div>
+              <button type="submit" class="btn-search">
+                <i class="fa-solid fa-plane"></i> Search Flights
+              </button>
+            </form>
+          </div>
+
+          <!-- 3. Hotels Search Panel -->
+          <div id="hero-hotels-panel" class="search-form-panel">
+            <form id="hero-hotels-form" class="search-grid">
+              <div class="search-field">
+                <label><i class="fa-solid fa-city"></i> City or Resort</label>
+                <input type="text" id="hero-hotel-dest" placeholder="e.g. Paris, Tokyo, Bali..." value="Paris" />
+              </div>
+              <div class="search-field">
+                <label><i class="fa-solid fa-calendar-check"></i> Check-In</label>
+                <input type="date" value="2026-10-16" />
+              </div>
+              <div class="search-field">
+                <label><i class="fa-solid fa-calendar-xmark"></i> Check-Out</label>
+                <input type="date" value="2026-10-20" />
+              </div>
+              <div class="search-field">
+                <label><i class="fa-solid fa-user-group"></i> Guests & Rooms</label>
+                <select>
+                  <option value="2-1">2 Guests, 1 Room</option>
+                  <option value="1-1">1 Guest, 1 Room</option>
+                  <option value="4-2">4 Guests, 2 Rooms</option>
+                </select>
+              </div>
+              <button type="submit" class="btn-search">
+                <i class="fa-solid fa-hotel"></i> Find Stays
+              </button>
+            </form>
+          </div>
+
+          <!-- 4. Packages Search Panel -->
+          <div id="hero-packages-panel" class="search-form-panel">
+            <form id="hero-packages-form" class="search-grid">
+              <div class="search-field">
+                <label><i class="fa-solid fa-globe"></i> Destination Region</label>
+                <select>
+                  <option value="all">All World Regions</option>
+                  <option value="europe">Europe & Mediterranean</option>
+                  <option value="asia">Asia & Pacific</option>
+                  <option value="middle-east">Middle East & Arabia</option>
+                </select>
+              </div>
+              <div class="search-field">
+                <label><i class="fa-solid fa-clock"></i> Duration</label>
+                <select>
+                  <option value="all">Any Duration</option>
+                  <option value="short">5 - 7 Days</option>
+                  <option value="medium">8 - 10 Days</option>
+                </select>
+              </div>
+              <div class="search-field">
+                <label><i class="fa-solid fa-shield-halved"></i> Package Type</label>
+                <select>
+                  <option value="all">All-Inclusive (Flights + 5★)</option>
+                  <option value="adventure">Alpine & Scenic Trails</option>
+                  <option value="wellness">Spiritual & Beach Retreat</option>
+                </select>
+              </div>
+              <button type="submit" class="btn-search">
+                <i class="fa-solid fa-suitcase"></i> View Packages
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Quick Trending Filters -->
+        <div class="quick-tags-bar">
+          <span class="quick-tag-label"><i class="fa-solid fa-fire"></i> <span data-i18n="trending_hubs">Trending Hubs:</span></span>
+          <button type="button" class="quick-tag-btn">#Paris</button>
+          <button type="button" class="quick-tag-btn">#London</button>
+          <button type="button" class="quick-tag-btn">#Tokyo</button>
+          <button type="button" class="quick-tag-btn">#Singapore</button>
+          <button type="button" class="quick-tag-btn">#Barcelona</button>
+          <button type="button" class="quick-tag-btn">#Sydney</button>
+          <button type="button" class="quick-tag-btn">#Venice</button>
+          <button type="button" class="quick-tag-btn">#Maldives</button>
+          <button type="button" class="quick-tag-btn">#Swiss Alps</button>
+          <button type="button" class="quick-tag-btn">#Bali</button>
+          <button type="button" class="quick-tag-btn">#Dubai</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       MAIN CONTENT ROUTER VIEWS
+       ========================================================================== -->
+  <main class="main-content">
+    <div class="container">
+
+      <!-- 1. FAMOUS PLACES VIEW -->
+      <section id="places-view" class="app-view active">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title" data-i18n="places_title">Famous Places & Interactive Map</h2>
+            <p class="section-desc" data-i18n="places_desc">Explore iconic global destinations, check real-time map pins, and schedule top attractions into your itinerary.</p>
+          </div>
+          <div class="filter-group">
+            <button class="filter-chip places-category-btn active" data-category="all">All Destinations</button>
+            <button class="filter-chip places-category-btn" data-category="cultural">Cultural & Historic</button>
+            <button class="filter-chip places-category-btn" data-category="beach">Tropical Beaches</button>
+            <button class="filter-chip places-category-btn" data-category="mountain">Mountain Escapes</button>
+            <button class="filter-chip places-category-btn" data-category="urban">Urban Marvels</button>
+            <button class="filter-chip places-category-btn" data-category="romance">Romance</button>
+          </div>
+        </div>
+
+        <div class="places-layout-split">
+          <!-- Left: Destination Cards Grid -->
+          <div id="destinations-grid-container" class="destinations-grid"></div>
+
+          <!-- Right: Interactive Leaflet Map -->
+          <div class="map-card-container">
+            <div class="map-controls-overlay">
+              <button id="btn-toggle-map-theme" class="map-theme-btn" title="Toggle Light / Dark Map Style">
+                <i class="fa-solid fa-sun" style="color: #f59e0b;"></i> <span id="map-theme-label" data-i18n="map_light_btn">Light Map</span>
+              </button>
+            </div>
+            <div id="places-map"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. FLIGHTS VIEW -->
+      <section id="flights-view" class="app-view">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title" data-i18n="flights_title">Flight Bookings & Live Routes</h2>
+            <p class="section-desc" data-i18n="flights_desc">Compare premier global airlines, configure cabin comfort, and generate instant digital boarding passes.</p>
+          </div>
+        </div>
+
+        <!-- Flight Filter Bar -->
+        <div class="filter-bar">
+          <div class="filter-group">
+            <label style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">Airlines:</label>
+            <select id="flight-airline-filter" class="currency-select" style="border-radius: var(--radius-md);">
+              <option value="all">All Premier Airlines</option>
+              <option value="Emirates">Emirates</option>
+              <option value="Singapore Airlines">Singapore Airlines</option>
+              <option value="Qatar Airways">Qatar Airways</option>
+              <option value="Air France">Air France</option>
+              <option value="All Nippon Airways (ANA)">ANA</option>
+              <option value="British Airways">British Airways</option>
+              <option value="Lufthansa">Lufthansa</option>
+              <option value="Swiss International">Swiss International</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">Route Stops:</label>
+            <select id="flight-stops-filter" class="currency-select" style="border-radius: var(--radius-md);">
+              <option value="all">All Routes</option>
+              <option value="direct">Direct Flights Only</option>
+              <option value="stops">With Layovers</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Flight Cards Container -->
+        <div id="flights-list-container" class="flights-results-grid"></div>
+      </section>
+
+      <!-- 3. HOTELS VIEW -->
+      <section id="hotels-view" class="app-view">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title" data-i18n="hotels_title">Luxury Hotel & Stay Reservations</h2>
+            <p class="section-desc" data-i18n="hotels_desc">Hand-picked 5-star sanctuaries, cliffside retreats, and boutique villas with transparent pricing.</p>
+          </div>
+        </div>
+
+        <!-- Hotel Filter Bar -->
+        <div class="filter-bar">
+          <div class="filter-group">
+            <input type="text" id="hotel-city-filter" placeholder="Search by city or property..." class="currency-select" style="border-radius: var(--radius-md); width: 260px;" />
+          </div>
+          <div class="filter-group">
+            <label style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">Max Price / Night:</label>
+            <select id="hotel-price-filter" class="currency-select" style="border-radius: var(--radius-md);">
+              <option value="2500">Any Price</option>
+              <option value="700">Up to $700</option>
+              <option value="1000">Up to $1,000</option>
+              <option value="1500">Up to $1,500</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Hotels Grid -->
+        <div id="hotels-list-container" class="hotels-grid"></div>
+      </section>
+
+      <!-- 4. PACKAGES VIEW -->
+      <section id="packages-view" class="app-view">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title" data-i18n="packages_title">Curated Holiday Packages</h2>
+            <p class="section-desc" data-i18n="packages_desc">Comprehensive all-inclusive multi-day journeys with luxury stays, guided expeditions, and seamless sync to your schedule.</p>
+          </div>
+        </div>
+
+        <!-- Packages Grid -->
+        <div id="packages-list-container" class="packages-grid"></div>
+      </section>
+
+      <!-- 5. EXPENDITURE & BUDGET TRACKER VIEW -->
+      <section id="expenditure-view" class="app-view">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title" data-i18n="budget_title">Smart Expenditure & Budget Analytics</h2>
+            <p class="section-desc" data-i18n="budget_desc">Live synchronization of all booked flights, stays, package days, attractions, and on-the-go expenses.</p>
+          </div>
+          <div style="display: flex; gap: 12px;">
+            <button class="btn-secondary" id="btn-edit-budget-target">
+              <i class="fa-solid fa-pen-to-square"></i> <span data-i18n="btn_set_budget">Set Budget Goal</span>
+            </button>
+            <button class="btn-secondary" id="btn-export-budget-csv">
+              <i class="fa-solid fa-file-csv"></i> <span data-i18n="btn_export_csv">Export CSV</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Metrics Cards -->
+        <div class="budget-hero-metrics">
+          <div class="metric-card">
+            <div class="metric-label" data-i18n="metric_target_budget">Total Trip Budget Goal</div>
+            <div class="metric-value" id="budget-target-val">$6,000</div>
+            <div class="metric-status-tag" style="color: var(--primary);">
+              <i class="fa-solid fa-bullseye"></i> <span data-i18n="allocated_fund">Allocated travel fund</span>
+            </div>
+          </div>
+
+          <div class="metric-card spent">
+            <div class="metric-label" data-i18n="metric_total_spent">Total Spent to Date</div>
+            <div class="metric-value" id="budget-spent-val" style="color: var(--accent-coral);">$0</div>
+            <div class="metric-status-tag" id="budget-burn-rate" style="color: var(--accent-coral);">
+              0% of budget spent
+            </div>
+          </div>
+
+          <div class="metric-card remaining">
+            <div class="metric-label" data-i18n="metric_remaining">Remaining Balance</div>
+            <div class="metric-value" id="budget-remaining-val" style="color: var(--accent-emerald);">$6,000</div>
+            <div class="metric-status-tag" style="color: var(--accent-emerald);">
+              <i class="fa-solid fa-shield-check"></i> <span data-i18n="ready_adventures">Ready for adventures</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Health Progress Bar -->
+        <div class="budget-progress-container">
+          <div class="progress-header">
+            <span data-i18n="budget_health_label">Budget Utilization Health</span>
+            <span id="budget-health-badge">
+              <i class="fa-solid fa-circle-check" style="color:var(--accent-emerald);"></i> 
+              <span style="color:var(--accent-emerald);">Budget Healthy</span>
+            </span>
+          </div>
+          <div class="progress-track">
+            <div id="budget-progress-fill" class="progress-fill safe" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <!-- Chart & Logger Grid -->
+        <div class="expenditure-layout-grid">
+          <!-- Left: Chart.js Doughnut -->
+          <div class="chart-card">
+            <h3 style="font-size: 1.15rem; margin-bottom: 6px;">Expense Category Breakdown</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); text-align: center;">Interactive live breakdown by travel category</p>
+            <div class="chart-wrapper">
+              <canvas id="budget-breakdown-chart"></canvas>
+            </div>
+          </div>
+
+          <!-- Right: Custom Expense Logger -->
+          <div class="expense-logger-card">
+            <h3 style="font-size: 1.15rem; margin-bottom: 6px;">Quick Expense Logger</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 18px;">Log spontaneous meals, transit passes, or souvenirs on the fly</p>
+
+            <form id="add-expense-form">
+              <div class="expense-form-grid">
+                <div class="search-field">
+                  <label><i class="fa-solid fa-pen"></i> Description</label>
+                  <input type="text" id="expense-title-input" placeholder="e.g. Fine dining at Le Jules Verne" required />
+                </div>
+                <div class="search-field">
+                  <label><i class="fa-solid fa-tag"></i> Category</label>
+                  <select id="expense-category-input">
+                    <option value="dining">Food & Dining</option>
+                    <option value="transit">Local Transit</option>
+                    <option value="activities">Activities & Entry</option>
+                    <option value="misc">Shopping & Souvenirs</option>
+                    <option value="flights">Flight Upgrades</option>
+                    <option value="hotels">Hotel Room Service</option>
+                  </select>
+                </div>
+                <div class="search-field" style="max-width: 140px;">
+                  <label><i class="fa-solid fa-dollar-sign"></i> Amount</label>
+                  <input type="number" id="expense-amount-input" placeholder="120" min="1" step="any" required />
+                </div>
+                <div class="search-field" style="max-width: 150px;">
+                  <label><i class="fa-solid fa-calendar"></i> Date</label>
+                  <input type="date" id="expense-date-input" value="2026-10-15" />
+                </div>
+                <button type="submit" class="btn-primary" style="height: 52px; padding: 0 20px;">
+                  <i class="fa-solid fa-plus"></i> Add
+                </button>
+              </div>
+            </form>
+
+            <!-- Expense Ledger Table -->
+            <div class="expenses-table-wrapper">
+              <table class="expenses-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th style="text-align: right;">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="expenses-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. MASTER TRIP ITINERARY VIEW ("MY TRIP") -->
+      <section id="itinerary-view" class="app-view">
+        <div class="itinerary-hero-header">
+          <div>
+            <div style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary); font-weight: 800; margin-bottom: 6px;" data-i18n="itinerary_title">
+              Master Trip Itinerary
+            </div>
+            <h2 id="itinerary-trip-title" style="font-size: 2rem; font-weight: 800; margin-bottom: 6px;">Grand World Odyssey</h2>
+            <p id="itinerary-dates-summary" style="font-size: 0.95rem; color: var(--text-secondary);">2026-10-15 to 2026-10-24</p>
+          </div>
+          <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+            <button class="btn-secondary" id="btn-add-custom-plan">
+              <i class="fa-solid fa-calendar-plus"></i> <span data-i18n="btn_add_custom_plan">Add Custom Plan</span>
+            </button>
+            <button class="btn-primary" id="btn-print-itinerary">
+              <i class="fa-solid fa-print"></i> <span data-i18n="btn_print_itinerary">Print Travel Pass</span>
+            </button>
+            <button class="btn-secondary" id="btn-clear-entire-trip" style="border-color: rgba(244, 63, 94, 0.4); color: var(--accent-coral);" title="Reset Trip">
+              <i class="fa-solid fa-rotate-left"></i> <span data-i18n="btn_reset">Reset</span>
+            </button>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+          <h3 style="font-size: 1.3rem;" data-i18n="timeline_title">Chronological Daily Timeline</h3>
+          <span id="itinerary-items-count" style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">0 scheduled items</span>
+        </div>
+
+        <!-- Daily Itinerary Blocks Container -->
+        <div id="itinerary-timeline-container" class="itinerary-days-container"></div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ==========================================================================
+       MODALS
+       ========================================================================== -->
+
+  <!-- 1. Flight Booking & Seat Selection Modal -->
+  <div id="flight-booking-modal" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">Select Seats & Book Flight</h3>
+          <p id="modal-flight-airline" style="font-size: 0.85rem; color: var(--text-muted);"></p>
+        </div>
+        <button class="modal-close-btn" id="btn-close-flight-modal" aria-label="Close Modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div style="display: flex; align-items: center; justify-content: space-between; background: var(--bg-tertiary); padding: 14px 18px; border-radius: var(--radius-md); margin-bottom: 20px;">
+          <div>
+            <div id="modal-flight-route" style="font-weight: 700; font-size: 0.95rem;"></div>
+            <div id="modal-flight-cabin" style="font-size: 0.8rem; color: var(--primary);"></div>
+          </div>
+          <div style="text-align: right;">
+            <div id="modal-flight-price" style="font-size: 1.4rem; font-weight: 800; color: var(--accent-emerald);"></div>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Selected Seat: <strong id="selected-seat-badge" style="color:var(--primary);">14A</strong></span>
+          </div>
+        </div>
+
+        <h4 style="font-size: 0.95rem; margin-bottom: 8px;">Interactive Cabin Seat Selector</h4>
+        <div id="interactive-seat-map" class="seat-map-container"></div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 20px;">
+          <div class="search-field">
+            <label><i class="fa-solid fa-user"></i> Primary Passenger Name</label>
+            <input type="text" id="flight-passenger-name" value="Dr. Eleanor Vance" required />
+          </div>
+          <div class="search-field">
+            <label><i class="fa-solid fa-passport"></i> Passport / ID Number</label>
+            <input type="text" id="flight-passport-id" value="P92847103" required />
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-primary" id="btn-confirm-flight-booking" style="width: 100%; justify-content: center;">
+          <i class="fa-solid fa-check"></i> Complete Booking & Generate Boarding Pass
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Digital Boarding Pass Modal -->
+  <div id="boarding-pass-modal" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fa-solid fa-plane-circle-check" style="color: var(--primary);"></i> Digital Boarding Pass</h3>
+        <button class="modal-close-btn" id="btn-close-pass-modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body" id="boarding-pass-content"></div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="btn-print-pass">
+          <i class="fa-solid fa-print"></i> Print Boarding Pass
+        </button>
+        <button class="btn-primary" onclick="document.getElementById('boarding-pass-modal').classList.remove('active'); window.switchView('itinerary-view');">
+          <i class="fa-solid fa-map-location-dot"></i> View in Master Itinerary
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Hotel Reservation Modal -->
+  <div id="hotel-booking-modal" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title" id="modal-hotel-name">Reserve Hotel Stay</h3>
+          <p id="modal-hotel-loc" style="font-size: 0.85rem; color: var(--text-muted);"></p>
+        </div>
+        <button class="modal-close-btn" id="btn-close-hotel-modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <h4 style="font-size: 0.95rem; margin-bottom: 12px;">Choose Room & Suite Category</h4>
+        <div id="hotel-rooms-container" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;"></div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px;">
+          <div class="search-field">
+            <label><i class="fa-solid fa-calendar"></i> Check-in Date</label>
+            <input type="date" id="hotel-checkin-date" value="2026-10-16" />
+          </div>
+          <div class="search-field">
+            <label><i class="fa-solid fa-moon"></i> Number of Nights</label>
+            <input type="number" id="hotel-nights-input" value="3" min="1" max="30" />
+          </div>
+        </div>
+
+        <div class="search-field" style="margin-bottom: 20px;">
+          <label><i class="fa-solid fa-user"></i> Guest Name</label>
+          <input type="text" id="hotel-guest-name" value="Alexander Hayes" />
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; background: var(--bg-tertiary); padding: 14px 18px; border-radius: var(--radius-md);">
+          <span style="font-weight: 700;">Total Stay Price:</span>
+          <span id="modal-hotel-total-price" style="font-size: 1.3rem; font-weight: 800; color: var(--primary); font-family: 'Outfit', sans-serif;">$0</span>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-primary" id="btn-confirm-hotel-booking" style="width: 100%; justify-content: center;">
+          <i class="fa-solid fa-file-invoice"></i> Confirm Stay & Issue Voucher
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Hotel Voucher Modal -->
+  <div id="hotel-voucher-modal" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fa-solid fa-hotel" style="color: var(--secondary);"></i> Hotel Reservation Voucher</h3>
+        <button class="modal-close-btn" id="btn-close-voucher-modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body" id="hotel-voucher-content"></div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="btn-print-voucher">
+          <i class="fa-solid fa-print"></i> Print Voucher
+        </button>
+        <button class="btn-primary" onclick="document.getElementById('hotel-voucher-modal').classList.remove('active'); window.switchView('itinerary-view');">
+          <i class="fa-solid fa-map-location-dot"></i> View in Master Itinerary
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Destination Details & Attractions Modal -->
+  <div id="destination-detail-modal" class="modal-overlay">
+    <div class="modal-dialog large">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title" id="modal-dest-title">Destination Discovery</h3>
+          <p id="modal-dest-tagline" style="font-size: 0.85rem; color: var(--text-muted);"></p>
+        </div>
+        <button class="modal-close-btn" id="btn-close-dest-modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div style="height: 240px; border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 20px;">
+          <img id="modal-dest-image" src="" alt="Destination" style="width:100%; height:100%; object-fit: cover;" />
+        </div>
+
+        <p id="modal-dest-desc" style="font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px;"></p>
+
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; background: var(--bg-tertiary); padding: 16px; border-radius: var(--radius-md); margin-bottom: 24px;">
+          <div>
+            <div style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Best Travel Season</div>
+            <div id="modal-dest-season" style="font-weight: 700; font-size: 0.95rem; margin-top: 2px;"></div>
+          </div>
+          <div>
+            <div style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Local Currency</div>
+            <div id="modal-dest-currency" style="font-weight: 700; font-size: 0.95rem; margin-top: 2px;"></div>
+          </div>
+          <div>
+            <div style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Est. Daily Budget</div>
+            <div id="modal-dest-budget" style="font-weight: 700; font-size: 0.95rem; margin-top: 2px; color: var(--primary);"></div>
+          </div>
+        </div>
+
+        <h4 style="font-size: 1.1rem; margin-bottom: 4px;">Top Must-Visit Attractions</h4>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Add attractions directly to your trip itinerary and synchronize ticket costs</p>
+        <div id="modal-dest-attractions-list" class="attractions-modal-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. Package Details Modal -->
+  <div id="package-detail-modal" class="modal-overlay">
+    <div class="modal-dialog large">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title" id="modal-pkg-title">Holiday Package</h3>
+          <p id="modal-pkg-duration" style="font-size: 0.85rem; color: var(--primary); font-weight: 700;"></p>
+        </div>
+        <button class="modal-close-btn" id="btn-close-pkg-modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div style="height: 220px; border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 20px;">
+          <img id="modal-pkg-image" src="" alt="Package" style="width:100%; height:100%; object-fit: cover;" />
+        </div>
+
+        <h4 style="font-size: 1rem; margin-bottom: 8px;">All Inclusions:</h4>
+        <div id="modal-pkg-inclusions" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px;"></div>
+
+        <h4 style="font-size: 1.1rem; margin-bottom: 6px;">Day-by-Day Comprehensive Itinerary:</h4>
+        <div id="modal-pkg-timeline" class="pkg-timeline"></div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 20px;">
+          <div class="search-field">
+            <label><i class="fa-solid fa-calendar"></i> Trip Start Date</label>
+            <input type="date" id="package-start-date" value="2026-10-15" />
+          </div>
+          <div class="search-field">
+            <label><i class="fa-solid fa-user-group"></i> Number of Guests</label>
+            <input type="number" id="package-guests-input" value="2" min="1" max="10" />
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">Package Price per Person</div>
+          <div id="modal-pkg-price" style="font-size: 1.5rem; font-weight: 800; color: var(--primary); font-family: 'Outfit', sans-serif;"></div>
+        </div>
+        <button class="btn-primary" id="btn-book-package-confirm">
+          <i class="fa-solid fa-check"></i> Book Package & Populate Full Schedule
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. Add Custom Activity Modal -->
+  <div id="add-activity-modal" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fa-solid fa-calendar-plus" style="color: var(--primary);"></i> Add Custom Plan</h3>
+        <button class="modal-close-btn" id="btn-close-act-modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="search-field" style="margin-bottom: 14px;">
+          <label><i class="fa-solid fa-pen"></i> Plan Title</label>
+          <input type="text" id="act-title-input" placeholder="e.g. Sunset drinks at Sky Bar" required />
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+          <div class="search-field">
+            <label><i class="fa-solid fa-calendar-day"></i> Trip Day Number</label>
+            <input type="number" id="act-day-input" value="1" min="1" max="30" />
+          </div>
+          <div class="search-field">
+            <label><i class="fa-solid fa-clock"></i> Scheduled Time</label>
+            <input type="text" id="act-time-input" value="06:30 PM" />
+          </div>
+        </div>
+
+        <div class="search-field">
+          <label><i class="fa-solid fa-sticky-note"></i> Notes or Booking Details</label>
+          <input type="text" id="act-notes-input" placeholder="Table reservation for 2 under Alexander" />
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-primary" id="btn-save-custom-activity" style="width: 100%; justify-content: center;">
+          <i class="fa-solid fa-plus"></i> Save to Itinerary
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- ==========================================================================
+       SITE FOOTER
+       ========================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-about">
+          <div class="brand-logo" style="margin-bottom: 14px;">
+            <div class="brand-icon" style="width: 36px; height: 36px; font-size: 1rem;">
+              <i class="fa-solid fa-compass"></i>
+            </div>
+            <div class="brand-text" style="font-size: 1.3rem;">Voyage<span>Craft</span></div>
+          </div>
+          <p>The next-generation all-in-one travel planning ecosystem, combining airline ticketing, boutique stays, world attractions, and smart budget analytics.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Platform Hubs</h4>
+          <ul>
+            <li><a href="#" onclick="window.switchView('places-view'); return false;">Famous Places</a></li>
+            <li><a href="#" onclick="window.switchView('flights-view'); return false;">Flight Bookings</a></li>
+            <li><a href="#" onclick="window.switchView('hotels-view'); return false;">Hotel Stays</a></li>
+            <li><a href="#" onclick="window.switchView('packages-view'); return false;">Planning Packages</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Trip Tools</h4>
+          <ul>
+            <li><a href="#" onclick="window.switchView('expenditure-view'); return false;">Expenditure Tracker</a></li>
+            <li><a href="#" onclick="window.switchView('itinerary-view'); return false;">Master Itinerary</a></li>
+            <li><a href="#" onclick="window.print(); return false;">Print Travel Briefing</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Global Currencies</h4>
+          <ul>
+            <li><a href="#">USD - US Dollar ($)</a></li>
+            <li><a href="#">EUR - Euro (€)</a></li>
+            <li><a href="#">INR - Indian Rupee (₹)</a></li>
+            <li><a href="#">JPY - Japanese Yen (¥)</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 VoyageCraft. All Rights Reserved. Built for Luxury & Exploration.</div>
+        <div style="display: flex; gap: 16px;">
+          <a href="#" style="color: var(--text-muted);"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="#" style="color: var(--text-muted);"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" style="color: var(--text-muted);"><i class="fa-brands fa-github"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       VOYAGEAI FLOATING ASSISTANT & CHAT CONCIERGE
+       ========================================================================== -->
+  <!-- Floating Launcher Button -->
+  <button id="ai-assistant-toggle-btn" class="ai-assistant-toggle-btn" aria-label="Open VoyageAI Assistant">
+    <div class="ai-toggle-icon-box">
+      <i class="fa-solid fa-sparkles"></i>
+    </div>
+    <span data-i18n="ai_btn_label">Ask VoyageAI</span>
+  </button>
+
+  <!-- Floating Chat Window Drawer -->
+  <aside id="ai-chat-window" class="ai-chat-window" aria-label="VoyageAI Chat">
+    <!-- Chat Header -->
+    <div class="ai-chat-header">
+      <div class="ai-profile-info">
+        <div class="ai-avatar">
+          <i class="fa-solid fa-compass"></i>
+          <span class="ai-online-dot"></span>
+        </div>
+        <div>
+          <div class="ai-name-title" data-i18n="ai_title">VoyageAI Concierge</div>
+          <div class="ai-status-subtitle">
+            <i class="fa-solid fa-circle" style="font-size: 0.45rem;"></i> <span data-i18n="ai_status">Online • Travel Expert</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ai-header-controls">
+        <button class="ai-header-btn" id="ai-chat-clear-btn" title="Clear Conversation" aria-label="Clear Chat">
+          <i class="fa-solid fa-trash-can"></i>
+        </button>
+        <button class="ai-header-btn" id="ai-chat-minimize-btn" title="Minimize Chat" aria-label="Minimize Chat">
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick Prompt Chips -->
+    <div class="ai-quick-chips-wrapper">
+      <button type="button" class="ai-chip-btn" data-prompt="Suggest a 5-day luxury trip to Bali">🌴 Bali 5-Day Plan</button>
+      <button type="button" class="ai-chip-btn" data-prompt="Find flights to Tokyo or Paris">✈️ Flights to Tokyo</button>
+      <button type="button" class="ai-chip-btn" data-prompt="What are the best luxury hotels in Paris?">🏨 5★ Hotels in Paris</button>
+      <button type="button" class="ai-chip-btn" data-prompt="How much budget do I have remaining?">💰 Check My Budget</button>
+      <button type="button" class="ai-chip-btn" data-prompt="Tell me about the 7-day Swiss Alps package">🏔️ Swiss Package</button>
+    </div>
+
+    <!-- Messages Container -->
+    <div id="ai-chat-messages" class="ai-chat-messages"></div>
+
+    <!-- Chat Input Bar -->
+    <div class="ai-chat-input-bar">
+      <form id="ai-chat-form" class="ai-input-form">
+        <input type="text" id="ai-chat-input" class="ai-text-input" placeholder="Ask about flights, hotels, packages, budget..." data-i18n-placeholder="ai_placeholder" autocomplete="off" />
+        <button type="submit" class="ai-send-btn" title="Send Message" aria-label="Send Query">
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </form>
+      <div style="font-size: 0.68rem; color: var(--text-muted); text-align: center; margin-top: 6px;" data-i18n="ai_disclaimer">
+        VoyageAI automatically synchronizes with your active trip and budget data.
+      </div>
+    </div>
+  </aside>
+
+  <!-- Leaflet Map JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <!-- Chart.js 4.4.1 -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <!-- Application Module Entry -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
