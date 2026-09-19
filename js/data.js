@@ -580,12 +580,11 @@ export const FLIGHTS = [
     stops: "Direct",
     aircraft: "Boeing 787-9 Dreamliner",
     baggage: "2 x 23kg included",
-    cabinClasses:      {
-        economy: 750,
-        premium: 1100,
-        business: 2300,
-        first: 4200
-      }
+    cabinClasses: {
+      economy: 750,
+      premium: 1100,
+      business: 2300,
+      first: 4200
     }
   },
   {
