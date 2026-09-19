@@ -92,19 +92,49 @@ export function renderHotelCards(hotels) {
 function setupHotelFilters() {
   const cityFilter = document.getElementById('hotel-city-filter');
   const priceFilter = document.getElementById('hotel-price-filter');
+  const cityChips = document.querySelectorAll('.hotel-city-chip');
 
   const applyFilters = () => {
     const cityVal = (cityFilter?.value || '').toLowerCase().trim();
-    const maxPrice = Number(priceFilter?.value) || 2000;
+    const maxPrice = Number(priceFilter?.value) || 2500;
 
     currentHotels = HOTELS.filter(hotel => {
-      const matchCity = !cityVal || hotel.city.toLowerCase().includes(cityVal) || hotel.country.toLowerCase().includes(cityVal);
+      const matchCity = !cityVal || 
+        hotel.city.toLowerCase().includes(cityVal) || 
+        hotel.country.toLowerCase().includes(cityVal) ||
+        hotel.name.toLowerCase().includes(cityVal);
       const matchPrice = hotel.pricePerNight <= maxPrice;
       return matchCity && matchPrice;
     });
 
+    // Sync active state on city chips if applicable
+    cityChips.forEach(chip => {
+      const cCity = (chip.dataset.city || '').toLowerCase();
+      if (!cityVal && cCity === 'all') {
+        chip.classList.add('active');
+      } else if (cityVal && (cCity === cityVal || cCity.includes(cityVal) || cityVal.includes(cCity))) {
+        chip.classList.add('active');
+      } else {
+        chip.classList.remove('active');
+      }
+    });
+
     renderHotelCards(currentHotels);
   };
+
+  // Wire city filter chips
+  cityChips.forEach(chip => {
+    chip.addEventListener('click', (e) => {
+      e.preventDefault();
+      cityChips.forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      const targetCity = chip.dataset.city;
+      if (cityFilter) {
+        cityFilter.value = targetCity === 'all' ? '' : targetCity;
+      }
+      applyFilters();
+    });
+  });
 
   if (cityFilter) cityFilter.addEventListener('input', applyFilters);
   if (priceFilter) priceFilter.addEventListener('input', applyFilters);
@@ -123,7 +153,7 @@ export function searchHotels(destinationQuery) {
   renderHotelCards(currentHotels);
 }
 
-function openHotelReservationModal(hotelId) {
+export function openHotelReservationModal(hotelId) {
   selectedHotel = HOTELS.find(h => h.id === hotelId);
   if (!selectedHotel) return;
 
@@ -301,3 +331,9 @@ export function showHotelVoucherModal(booking) {
     printBtn.onclick = () => window.print();
   }
 }
+
+// Expose globally for cross-module interactions (e.g. from destination explorer modal)
+if (typeof window !== 'undefined') {
+  window.openHotelReservationModal = openHotelReservationModal;
+}
+

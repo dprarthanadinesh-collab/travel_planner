@@ -3,7 +3,7 @@
    Destination Explorer, Leaflet Dark Mode Map, & Attraction Scheduler
    ========================================================================== */
 
-import { DESTINATIONS } from './data.js';
+import { DESTINATIONS, HOTELS } from './data.js';
 import { store } from './store.js';
 
 let mapInstance = null;
@@ -252,6 +252,7 @@ function openDestinationModal(destId) {
   if (heroImg) heroImg.src = selectedDestination.image;
 
   renderModalAttractions();
+  renderModalHotels();
   modal.classList.add('active');
 }
 
@@ -291,6 +292,85 @@ function renderModalAttractions() {
         e.currentTarget.innerHTML = '<i class="fa-solid fa-check"></i> Added';
         e.currentTarget.disabled = true;
         e.currentTarget.style.opacity = '0.7';
+      }
+    });
+  });
+}
+
+function renderModalHotels() {
+  const container = document.getElementById('modal-dest-hotels-list');
+  const cityEl = document.getElementById('modal-dest-hotel-city');
+  const countEl = document.getElementById('modal-dest-hotel-count');
+  if (!container || !selectedDestination) return;
+
+  const cityName = selectedDestination.name;
+  if (cityEl) cityEl.textContent = cityName;
+
+  // Match hotels by city name, country, or keyword
+  const nameQuery = cityName.toLowerCase();
+  const countryQuery = selectedDestination.country.toLowerCase();
+
+  const matchingHotels = HOTELS.filter(h => {
+    const hCity = h.city.toLowerCase();
+    const hCountry = h.country.toLowerCase();
+    return hCity.includes(nameQuery) || nameQuery.includes(hCity) ||
+           (countryQuery && (hCountry.includes(countryQuery) || countryQuery.includes(hCountry)));
+  });
+
+  if (countEl) {
+    countEl.textContent = `${matchingHotels.length} Premier ${matchingHotels.length === 1 ? 'Property' : 'Properties'}`;
+  }
+
+  if (matchingHotels.length === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; padding: 24px; background: var(--bg-tertiary); border-radius: var(--radius-md); grid-column: 1 / -1;">
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">Explore luxury accommodations across all global destinations in our main Hotels tab.</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = matchingHotels.map(hotel => {
+    const formattedPrice = store.formatPrice(hotel.pricePerNight);
+    const starIcons = '★'.repeat(hotel.stars);
+
+    return `
+      <div class="dest-modal-hotel-card">
+        <div class="dest-modal-hotel-img-wrap">
+          <img src="${hotel.image}" alt="${hotel.name}" loading="lazy" />
+          <span class="dest-modal-hotel-rating"><i class="fa-solid fa-star"></i> ${hotel.rating}</span>
+        </div>
+        <div class="dest-modal-hotel-info">
+          <div class="dest-modal-hotel-stars">${starIcons}</div>
+          <h4 class="dest-modal-hotel-name">${hotel.name}</h4>
+          <p class="dest-modal-hotel-addr"><i class="fa-solid fa-location-dot"></i> ${hotel.address}</p>
+          <div class="dest-modal-hotel-amenities">
+            ${hotel.amenities.slice(0, 3).map(a => `<span class="amenity-chip"><i class="fa-solid fa-check"></i> ${a}</span>`).join('')}
+          </div>
+          <div class="dest-modal-hotel-footer">
+            <div class="dest-modal-hotel-price">
+              <span class="price-val">${formattedPrice}</span>
+              <span class="price-lbl">/ night</span>
+            </div>
+            <button class="btn-primary btn-modal-reserve-hotel" data-hotel-id="${hotel.id}">
+              <i class="fa-solid fa-bed"></i> Reserve Stay
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  container.querySelectorAll('.btn-modal-reserve-hotel').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const hotelId = e.currentTarget.dataset.hotelId;
+      // Close destination modal
+      const destModal = document.getElementById('destination-detail-modal');
+      if (destModal) destModal.classList.remove('active');
+
+      // Open hotel reservation modal
+      if (window.openHotelReservationModal) {
+        window.openHotelReservationModal(hotelId);
       }
     });
   });

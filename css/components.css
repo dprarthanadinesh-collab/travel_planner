@@ -1549,3 +1549,175 @@
 .ai-send-btn:hover {
   transform: scale(1.08);
 }
+
+/* ==========================================================================
+   DESTINATION DETAIL MODAL - PREMIER HOTELS GRID
+   ========================================================================== */
+.destination-modal-hotels-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.dest-modal-hotel-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.dest-modal-hotel-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--primary);
+  box-shadow: var(--shadow-md);
+}
+
+.dest-modal-hotel-img-wrap {
+  position: relative;
+  height: 140px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.dest-modal-hotel-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-normal);
+}
+
+.dest-modal-hotel-card:hover .dest-modal-hotel-img-wrap img {
+  transform: scale(1.05);
+}
+
+.dest-modal-hotel-rating {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(11, 15, 25, 0.85);
+  backdrop-filter: blur(8px);
+  color: var(--accent-gold);
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.dest-modal-hotel-info {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.dest-modal-hotel-stars {
+  color: var(--accent-gold);
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+}
+
+.dest-modal-hotel-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+
+.dest-modal-hotel-addr {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dest-modal-hotel-amenities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+
+.amenity-chip {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-size: 0.7rem;
+  padding: 2px 7px;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.amenity-chip i {
+  color: var(--primary);
+  font-size: 0.65rem;
+}
+
+.dest-modal-hotel-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-color);
+}
+
+.dest-modal-hotel-price .price-val {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.dest-modal-hotel-price .price-lbl {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.btn-modal-reserve-hotel {
+  padding: 7px 12px;
+  font-size: 0.8rem;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+/* Hotel City Quick Chips Bar */
+.hotel-city-chips-wrapper {
+  position: relative;
+}
+
+.hotel-city-chips-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+.hotel-city-chips-scroll::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+.hotel-city-chip {
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.hotel-city-chip:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.hotel-city-chip.active {
+  background: var(--primary);
+  color: #0b0f19;
+  border-color: var(--primary);
+  font-weight: 700;
+}
+

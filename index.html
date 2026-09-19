@@ -416,7 +416,7 @@
         </div>
 
         <!-- Hotel Filter Bar -->
-        <div class="filter-bar">
+        <div class="filter-bar" style="margin-bottom: 12px;">
           <div class="filter-group">
             <input type="text" id="hotel-city-filter" placeholder="Search by city or property..." class="currency-select" style="border-radius: var(--radius-md); width: 260px;" />
           </div>
@@ -428,6 +428,35 @@
               <option value="1000">Up to $1,000</option>
               <option value="1500">Up to $1,500</option>
             </select>
+          </div>
+        </div>
+
+        <!-- Quick Destination City Chips -->
+        <div class="hotel-city-chips-wrapper" style="margin-bottom: 20px;">
+          <div class="hotel-city-chips-scroll" style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: thin;">
+            <button class="filter-chip hotel-city-chip active" data-city="all">All Global Hubs (79)</button>
+            <button class="filter-chip hotel-city-chip" data-city="Paris">Paris (4)</button>
+            <button class="filter-chip hotel-city-chip" data-city="Tokyo">Tokyo (4)</button>
+            <button class="filter-chip hotel-city-chip" data-city="Bali">Bali (4)</button>
+            <button class="filter-chip hotel-city-chip" data-city="Swiss Alps">Swiss Alps (4)</button>
+            <button class="filter-chip hotel-city-chip" data-city="Santorini">Santorini (4)</button>
+            <button class="filter-chip hotel-city-chip" data-city="Dubai">Dubai (4)</button>
+            <button class="filter-chip hotel-city-chip" data-city="Rome">Rome (4)</button>
+            <button class="filter-chip hotel-city-chip" data-city="New York City">New York (4)</button>
+            <button class="filter-chip hotel-city-chip" data-city="London">London (4)</button>
+            <button class="filter-chip hotel-city-chip" data-city="Barcelona">Barcelona (4)</button>
+            <button class="filter-chip hotel-city-chip" data-city="Singapore">Singapore (4)</button>
+            <button class="filter-chip hotel-city-chip" data-city="Venice">Venice (4)</button>
+            <button class="filter-chip hotel-city-chip" data-city="Maldives">Maldives (4)</button>
+            <button class="filter-chip hotel-city-chip" data-city="Sydney">Sydney (3)</button>
+            <button class="filter-chip hotel-city-chip" data-city="Kyoto">Kyoto (3)</button>
+            <button class="filter-chip hotel-city-chip" data-city="Amsterdam">Amsterdam (3)</button>
+            <button class="filter-chip hotel-city-chip" data-city="Istanbul">Istanbul (3)</button>
+            <button class="filter-chip hotel-city-chip" data-city="Bangkok">Bangkok (3)</button>
+            <button class="filter-chip hotel-city-chip" data-city="Cairo">Cairo (3)</button>
+            <button class="filter-chip hotel-city-chip" data-city="Rio de Janeiro">Rio de Janeiro (3)</button>
+            <button class="filter-chip hotel-city-chip" data-city="Cape Town">Cape Town (3)</button>
+            <button class="filter-chip hotel-city-chip" data-city="Reykjavik">Reykjavik (3)</button>
           </div>
         </div>
 
@@ -783,9 +812,24 @@
           </div>
         </div>
 
-        <h4 style="font-size: 1.1rem; margin-bottom: 4px;">Top Must-Visit Attractions</h4>
+        <h4 style="font-size: 1.1rem; margin-bottom: 4px; display: flex; align-items: center; gap: 8px;">
+          <i class="fa-solid fa-landmark" style="color: var(--primary);"></i> Top Must-Visit Attractions
+        </h4>
         <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Add attractions directly to your trip itinerary and synchronize ticket costs</p>
         <div id="modal-dest-attractions-list" class="attractions-modal-list"></div>
+
+        <!-- Premier Hotels & Accommodations in this Place -->
+        <div class="modal-dest-hotels-section" style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border-color);">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; flex-wrap: wrap; gap: 8px;">
+            <h4 style="font-size: 1.15rem; margin-bottom: 0; display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-hotel" style="color: var(--primary);"></i>
+              Premier Hotels & Stays in <span id="modal-dest-hotel-city" style="color: var(--primary);"></span>
+            </h4>
+            <span id="modal-dest-hotel-count" class="badge-pill" style="background: rgba(2,132,199,0.12); color: var(--primary); font-size: 0.78rem; padding: 4px 10px; border-radius: 999px; font-weight: 700;"></span>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">Handpicked 5-star sanctuaries & boutique villas located directly in this destination</p>
+          <div id="modal-dest-hotels-list" class="destination-modal-hotels-grid"></div>
+        </div>
       </div>
     </div>
   </div>

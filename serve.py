@@ -22,10 +22,28 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         self.send_header('Cache-Control', 'no-store, no-cache, must-revalidate')
         super().end_headers()
 
+    def handle(self):
+        try:
+            super().handle()
+        except (ConnectionResetError, ConnectionAbortedError, BrokenPipeError):
+            pass
+
+    def log_message(self, format, *args):
+        # Clean standard logging
+        sys.stderr.write("%s - - [%s] %s\n" %
+                         (self.address_string(),
+                          self.log_date_time_string(),
+                          format % args))
+
+class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
+    daemon_threads = True
+    allow_reuse_address = True
+
 def run():
-    with socketserver.TCPServer(("", PORT), Handler) as httpd:
+    socketserver.TCPServer.allow_reuse_address = True
+    with ThreadedTCPServer(("", PORT), Handler) as httpd:
         print(f"============================================================")
-        print(f" VoyageCraft Travel Platform Running at http://localhost:{PORT}")
+        print(f" VoyageCraft Multi-Threaded Server at http://localhost:{PORT}")
         print(f" Press Ctrl+C to stop the server")
         print(f"============================================================")
         try:
